@@ -1,5 +1,9 @@
-// import 'dotenv';
+import { api, getUrl } from '@/lib/utils';
+import 'dotenv';
 import { redirect } from "next/navigation";
+
+const HOME_URL = process.env.HOME_URL!;
+const NODE_ENV = process.env.NODE_ENV!;
 
 export const initiateLinkedInAuth = () => {
     const rootUrl = "https://www.linkedin.com/oauth/v2/authorization";
@@ -21,3 +25,24 @@ export const initiateLinkedInAuth = () => {
 
     redirect(`${rootUrl}?${qs}`);
 };
+
+export async function authorizeConnection() {
+    try {
+        if (NODE_ENV === "development") {
+            const res = await api.post(getUrl("/auth/connect-home"));
+
+            if (res.status !== 200) {
+                throw new Error("Something went wrong!");
+            }
+
+            const redirectUrl = res.data.redirectUrl;
+            return redirect(redirectUrl);
+        }
+
+        const url = new URL("/auth/connect?app=the-port-mafia", HOME_URL).toString();
+
+        return redirect(url);
+    } catch (error) {
+        console.error("Something went wrong! Error: ", error);
+    }
+}
