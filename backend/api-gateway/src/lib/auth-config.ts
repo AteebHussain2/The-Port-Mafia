@@ -2,11 +2,13 @@ import { importPrivateKey, importPublicKey } from "./keys";
 import { jwt } from '@elysiajs/jwt';
 import { Elysia, t } from 'elysia';
 
-const rawPublic = await Bun.file('./public.pem').text();
-const publicKey = await importPublicKey(rawPublic);
+if (!process.env.JWT_PRIVATE_KEY || !process.env.JWT_PUBLIC_KEY) {
+    throw new Error("FATAL: JWT cryptographic keys are missing from environment variables!");
+}
 
-const rawPrivate = await Bun.file('./private.pem').text();
-const privateKey = await importPrivateKey(rawPrivate);
+// Import them directly on startup
+const privateKey = await importPrivateKey(process.env.JWT_PRIVATE_KEY);
+const publicKey = await importPublicKey(process.env.JWT_PUBLIC_KEY);
 
 // auth-config.ts reads the public key for decoding, 
 // gets the cryptographic publicKey and uses @elysiajs/jwt

@@ -13,6 +13,14 @@ const prodOrigins = [
     "https://home.markaz.network",
 ];
 
-export const allowedOrigins = process.env.NODE_ENV === "production"
-    ? prodOrigins
-    : devOrigins;
+// export const allowedOrigins = process.env.NODE_ENV === "production"
+//     ? prodOrigins
+//     : devOrigins;
+export const allowedOrigins = [
+    "http://localhost:3000",
+    "http://localhost:81",
+    "http://localhost",
+
+    "https://mafia.markaz.network",
+    "https://home.markaz.network",
+];

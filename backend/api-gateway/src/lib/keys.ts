@@ -10,7 +10,10 @@
  * - Converts it as cryptographic key for signing JWT
  */
 
-export const importPrivateKey = async (pem: string) => {
+export const importPrivateKey = async (rawPem: string) => {
+    // Normalize literal '\n' strings into actual crypto-readable newlines
+    const pem = rawPem.replace(/\\n/g, "\n");
+
     // Remove PEM headers and footers and newlines
     const pemHeader = "-----BEGIN PRIVATE KEY-----";
     const pemFooter = "-----END PRIVATE KEY-----";
@@ -42,7 +45,9 @@ export const importPrivateKey = async (pem: string) => {
  * @returns Cryptographic key for verifying JWT
  */
 
-export const importPublicKey = async (pem: string) => {
+export const importPublicKey = async (rawPem: string) => {
+    const pem = rawPem.replace(/\\n/g, "\n");
+
     const pemHeader = "-----BEGIN PUBLIC KEY-----";
     const pemFooter = "-----END PUBLIC KEY-----";
     const pemContents = pem.substring(

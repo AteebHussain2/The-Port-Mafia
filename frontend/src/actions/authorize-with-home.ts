@@ -10,7 +10,6 @@ export async function authorizeConnection() {
         // TODO: This is the bypass till home server is activated... make sure to remove this later.
         // if (NODE_ENV === "development") {
         const res = await api.post(getUrl("/auth/connect-home"));
-        console.log(res)
 
         if (res.status !== 200) {
             throw new Error("Something went wrong!");
@@ -24,7 +23,6 @@ export async function authorizeConnection() {
 
         return url;
     } catch (error) {
-        console.log(error);
         throw error;
     }
 }
