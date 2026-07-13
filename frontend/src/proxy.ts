@@ -23,7 +23,7 @@ export async function proxy(request: NextRequest) {
     const payload = token ? await verifyJWT(token) : null;
     const isValidToken = !!payload
 
-    if (isPublicRoute && !isValidToken) {
+    if (!isPublicRoute && !isValidToken) {
         const loginUrl = new URL("http://localhost:80/auth/connect?app=the-port-mafia", request.url);
 
         loginUrl.searchParams.set("redirectTo", pathname);
