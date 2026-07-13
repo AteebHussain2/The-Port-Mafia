@@ -9,7 +9,6 @@ interface AuthPayload {
     firstName: string;
     lastName: string;
     email: string;
-    username: string;
 }
 
 // -------------------------------- LOAD PUBLIC KEY -----------------------------------

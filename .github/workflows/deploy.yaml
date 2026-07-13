@@ -14,10 +14,18 @@ jobs:
       - name: Checkout Repository Source
         uses: actions/checkout@v4
 
+      - name: Inject Runtime Secrets
+        run: |
+          mkdir -p frontend
+          cat <<EOF > frontend/.env
+          JWT_PUBLIC_KEY="${{ secrets.JWT_PUBLIC_KEY }}"
+          HOME_URL="${{ secrets.HOME_URL }}"
+          SERVER_URL="${{ secrets.SERVER_URL }}"
+          NODE_ENV="production"
+          EOF
+
       - name: Standardize and Rebuild Containers
         run: |
           docker compose down --remove-orphans
-
           docker compose up --build -d
-
           docker image prune -f

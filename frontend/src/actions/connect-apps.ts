@@ -39,9 +39,9 @@ export async function authorizeConnection() {
         return redirect(redirectUrl);
         // }
 
-        // const url = new URL("/auth/connect?app=the-port-mafia", HOME_URL).toString();
+        const url = new URL("/auth/connect?app=the-port-mafia", HOME_URL).toString();
 
-        // return redirect(url);
+        return redirect(url);
     } catch (error) {
         console.error("Something went wrong! Error: ", error);
     }

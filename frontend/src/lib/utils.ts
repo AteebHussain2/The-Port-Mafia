@@ -26,6 +26,6 @@ export function getRedirectUrl(searchParams: URLSearchParams): string {
 }
 
 export const api = axios.create({
-  baseURL: SERVER_URL ?? "http://localhost:3001",
+  baseURL: SERVER_URL ?? "http://localhost:3810",
   withCredentials: true,
 });
