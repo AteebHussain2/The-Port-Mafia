@@ -2,7 +2,7 @@ FROM oven/bun:latest
 
 WORKDIR /app
 
-ENV NODE_ENV=production
+ENV NODE_ENV=developement
 
 COPY package.json bun.lock ./
 
