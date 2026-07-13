@@ -1,8 +1,10 @@
 "use server"
 
-import 'dotenv';
+import dotenv from "dotenv";
 import { jwtVerify, importSPKI } from "jose";
 import { cookies } from "next/headers";
+
+dotenv.config();
 
 interface AuthPayload {
     userId: string;

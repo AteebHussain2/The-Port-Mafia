@@ -75,7 +75,7 @@ const app = new Elysia()
             refreshed: false
           });
 
-          const defaultDestination = 'http://localhost:81/linkedin?successfull-connection=true';
+          const defaultDestination = new URL('/linkedin?connection-successful=true', process.env.FRONTEND_URL).toString();
           const clientDestination = redirect_uri ? decodeURIComponent(redirect_uri) : defaultDestination;
 
           auth.set({
@@ -119,7 +119,7 @@ const app = new Elysia()
           refreshed: false
         });
 
-        const defaultDestination = 'http://localhost:81/linkedin?successfull-connection=true';
+        const defaultDestination = new URL('/linkedin?connection-successful=true', process.env.FRONTEND_URL).toString();
         const clientDestination = redirect_uri ? decodeURIComponent(redirect_uri) : defaultDestination;
 
         auth.set({
@@ -158,6 +158,6 @@ const app = new Elysia()
       return proxyTo(params.service, params['*'], request, String(userId));
     })
   )
-  .listen(3810);
+  .listen(3000);
 
 console.log(`API Gateway is running at ${app.server?.hostname}:${app.server?.port}`);

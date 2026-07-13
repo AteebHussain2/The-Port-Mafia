@@ -2,13 +2,12 @@
 
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { UserCircleIcon, CookieIcon, ArrowsLeftRightIcon } from "@phosphor-icons/react";
+import { authorizeConnection } from "@/actions/authorize-with-home";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { authorizeConnection } from "@/actions/connect-apps";
+import { useMutation } from "@tanstack/react-query";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 const permissions = [
