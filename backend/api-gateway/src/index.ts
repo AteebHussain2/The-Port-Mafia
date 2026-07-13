@@ -82,7 +82,10 @@ const app = new Elysia()
             value: token,
             httpOnly: true,
             maxAge: 7 * 24 * 3600,
-            path: '/'
+            path: '/',
+            domain: '.markaz.network',
+            sameSite: 'lax',
+            secure: true,
           })
 
           return status(200, {
@@ -126,7 +129,11 @@ const app = new Elysia()
           value: token,
           httpOnly: true,
           maxAge: 7 * 24 * 3600,
-          path: '/'
+          path: '/',
+
+          domain: '.markaz.network',
+          sameSite: 'lax',
+          secure: true,
         })
 
         return status(200, {

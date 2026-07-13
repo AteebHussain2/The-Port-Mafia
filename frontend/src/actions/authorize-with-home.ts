@@ -1,11 +1,10 @@
-"use server"
-
 import { api, getUrl } from '@/lib/utils';
+
+const HOME_URL = process.env.NEXT_PUBLIC_HOME_URL!;
+const NODE_ENV = process.env.NODE_ENV!;
 
 export async function authorizeConnection() {
     try {
-        const HOME_URL = process.env.HOME_URL!;
-        const NODE_ENV = process.env.NODE_ENV!;
 
         // TODO: This is the bypass till home server is activated... make sure to remove this later.
         // if (NODE_ENV === "development") {
