@@ -1,8 +1,5 @@
 "use client";
 
-// TODO: Remove this line once you have created the home server to connect to.
-export const dynamic = 'force-dynamic';
-
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { UserCircleIcon, CookieIcon, ArrowsLeftRightIcon } from "@phosphor-icons/react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";

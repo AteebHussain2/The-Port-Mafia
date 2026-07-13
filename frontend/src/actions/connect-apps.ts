@@ -28,20 +28,20 @@ export const initiateLinkedInAuth = () => {
 
 export async function authorizeConnection() {
     try {
-        if (NODE_ENV === "development") {
-            const res = await api.post(getUrl("/auth/connect-home"));
+        // if (NODE_ENV === "development") {
+        const res = await api.post(getUrl("/auth/connect-home"));
 
-            if (res.status !== 200) {
-                throw new Error("Something went wrong!");
-            }
-
-            const redirectUrl = res.data.redirectUrl;
-            return redirect(redirectUrl);
+        if (res.status !== 200) {
+            throw new Error("Something went wrong!");
         }
 
-        const url = new URL("/auth/connect?app=the-port-mafia", HOME_URL).toString();
+        const redirectUrl = res.data.redirectUrl;
+        return redirect(redirectUrl);
+        // }
 
-        return redirect(url);
+        // const url = new URL("/auth/connect?app=the-port-mafia", HOME_URL).toString();
+
+        // return redirect(url);
     } catch (error) {
         console.error("Something went wrong! Error: ", error);
     }
