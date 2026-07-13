@@ -1,17 +1,4 @@
 services:
-  mafia-postgres:
-    image: postgres:15-alpine
-    container_name: mafia-postgres
-    restart: always
-    environment:
-      POSTGRES_USER: mafia
-      POSTGRES_PASSWORD: mafia
-      POSTGRES_DB: mafia_core_db
-    volumes:
-      - mafia-db-data:/var/lib/postgresql/data
-    networks:
-      - mafia-network
-
   api-gateway:
     build: ./backend/api-gateway
     container_name: api-gateway
@@ -19,11 +6,12 @@ services:
     ports:
       - "3810:3000"
     environment:
-      - DATABASE_URL=postgresql://mafia:mafia@mafia-postgres:5432/mafia_core_db
+      - DATABASE_URL=postgresql://steiners:steiners@postgres:5432/mafia_db
     networks:
       - mafia-network
+      - global-database-network
     depends_on:
-      - mafia-postgres
+      - linkedin-service
 
   linkedin-service:
     build: ./backend/linkedin
@@ -31,8 +19,9 @@ services:
     restart: always
     networks:
       - mafia-network
+      - global-database-network
     depends_on:
-      - mafia-postgres
+      - frontend
 
   frontend:
     build: ./frontend
@@ -43,9 +32,9 @@ services:
     networks:
       - mafia-network
 
-volumes:
-  mafia-db-data:
-
 networks:
   mafia-network:
     driver: bridge
+
+  global-database-network:
+    external: true
