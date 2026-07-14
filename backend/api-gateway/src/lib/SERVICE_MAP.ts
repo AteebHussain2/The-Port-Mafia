@@ -3,6 +3,5 @@
 // to re-route request to the target host
 
 export const SERVICE_MAP = {
-    home: "http://localhost:3801",
-    linkedin: "http://localhost:3801",
+    linkedin: "http://linkedin:3000",
 } as const;

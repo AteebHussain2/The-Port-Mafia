@@ -165,6 +165,7 @@ const app = new Elysia()
       return proxyTo(params.service, params['*'], request, String(userId));
     })
   )
+  .get('/', () => "API-GATEWAY is Healthy!")
   .listen(3000);
 
 console.log(`API Gateway is running at ${app.server?.hostname}:${app.server?.port}`);
