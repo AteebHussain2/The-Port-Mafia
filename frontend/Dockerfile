@@ -16,7 +16,7 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 ENV NEXT_PUBLIC_HOME_URL=https://home.markaz.network/
-ENV NEXT_PUBLIC_SERVER_URL=https://api.mafia.markaz.network/
+ENV NEXT_PUBLIC_SERVER_URL=https://api-mafia.markaz.network/
 ENV NEXT_PUBLIC_DEFAULT_REDIRECT_URL=https://mafia.markaz.network/
 ENV NEXT_PUBLIC_LINKEDIN_CLIENT_ID=77detnq5fdbkke
 
