@@ -9,19 +9,14 @@ export const initiateLinkedInAuth = () => {
         throw new Error("Something went wrong!")
     }
 
-    const redirect_uri = getUrl("/linkedin/callback", "frontend");
+    const redirectUri = encodeURIComponent(getUrl("/linkedin/callback", "frontend"));
+    const state = "random_secure_string_or_csrf_token";
+    const scope = "openid profile email";
 
-    const options = {
-        response_type: "code",
-        client_id,
-        redirect_uri,
-        state: "random_secure_string_or_csrf_token",
-        scope: "openid profile email w_member_social",
-    };
+    const authUrl = `${rootUrl}?response_type=code&client_id=${client_id}&redirect_uri=${redirectUri}&scope=${scope}&state=${state}`;
 
-    const qs = new URLSearchParams(options).toString();
-
-    redirect(`${rootUrl}?${qs}`);
+    console.log(authUrl);
+    redirect(authUrl);
 };
 
 type ExchangeResult = {
