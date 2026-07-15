@@ -150,6 +150,8 @@ const app = new Elysia()
     // Protected Routes - all the routes targeting a specifc service are protected by-default
     // and required a valid JWT in headers to work. Otherwise '400, Unauthorised' is returned
     .all('/:service/*', async ({ params, request, set, status, proxyTo, verifyUser }) => {
+      console.log("API_GATEWAY: Redirecting user to: ", params['*']);
+
       const userId = await verifyUser();
       if (!userId) {
         set.headers[

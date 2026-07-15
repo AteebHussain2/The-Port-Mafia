@@ -15,7 +15,6 @@ export const initiateLinkedInAuth = () => {
 
     const authUrl = `${rootUrl}?response_type=code&client_id=${client_id}&redirect_uri=${redirectUri}&scope=${scope}&state=${state}`;
 
-    console.log(authUrl);
     redirect(authUrl);
 };
 
