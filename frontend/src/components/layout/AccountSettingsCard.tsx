@@ -4,13 +4,12 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import ConnectedAppsTabContent from "./ConnectedAppsTabContent";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import useSettings from "@/hooks/use-settings";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
-import connectedApps, { APPSTATUS } from "@/data/apps";
-import { cn } from "@/lib/utils";
 
 /**
  * Mock data — replace with your actual agent roster / connected-account
@@ -54,55 +53,7 @@ export function AccountSettingsDialog({ open, setOpen }: { open: boolean, setOpe
                         <Button variant="outline" size="sm">Edit Profile</Button>
                     </TabsContent>
 
-                    <TabsContent value="connections" className="pt-2">
-                        <div className="flex flex-col">
-                            {connectedApps.map((app, index) => {
-                                const Icon = app.icon;
-                                const isConnected = app.status === APPSTATUS.CONNECTED;
-                                const isUnavailable = app.status === APPSTATUS.UNAVAILABLE;
-                                return (
-                                    <div key={app.id} className="">
-                                        <div className={cn(
-                                            "px-4 rounded-sm group flex items-center justify-between py-2 my-2 transition-colors",
-                                            app.colors.bg
-                                        )}>
-                                            <div className="flex items-center gap-2.5">
-                                                <Icon
-                                                    size={18}
-                                                    weight={isConnected ? "fill" : "regular"}
-                                                    className={cn("transition-colors", app.colors.logo)}
-                                                />
-                                                <span className={cn("text-sm", !isConnected && "text-muted-foreground", app.colors.text)}>
-                                                    {app.name}
-                                                </span>
-                                            </div>
-
-                                            {isConnected ? (
-                                                <div className="flex items-center gap-2">
-                                                    <Badge variant="secondary">Connected</Badge>
-                                                    <Button variant="ghost" size="sm">Disconnect</Button>
-                                                </div>
-                                            ) : isUnavailable ? (
-                                                <Badge variant="outline" className="text-muted-foreground">
-                                                    Coming soon
-                                                </Badge>
-                                            ) : (
-                                                <Button
-                                                    variant="ghost"
-                                                    size="sm"
-                                                    className={cn("cursor-pointer", app.colors.button)}
-                                                    onClick={app?.connectAction}
-                                                >
-                                                    Connect Now
-                                                </Button>
-                                            )}
-                                        </div>
-                                        {index < connectedApps.length - 1 && <Separator className="opacity-40!" />}
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    </TabsContent>
+                    <ConnectedAppsTabContent />
 
                     <TabsContent value="agents" className="pt-2">
                         <div className="flex flex-col">

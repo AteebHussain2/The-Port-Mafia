@@ -1,11 +1,12 @@
-import { initiateLinkedInAuth } from "@/actions/connect-apps";
 import { Icon, FacebookLogoIcon, InstagramLogoIcon, LinkedinLogoIcon, XLogoIcon, ThreadsLogoIcon } from "@phosphor-icons/react";
+import { initiateLinkedInAuth } from "@/actions/connect-apps";
+import { APPTYPE } from "@/lib/enums";
 
 export type connectedApp = {
     id: string,
     name: string,
     icon: Icon,
-    status: APPSTATUS,
+    enable: boolean,
     colors: {
         bg: string,
         text: string,
@@ -15,31 +16,25 @@ export type connectedApp = {
     connectAction?: () => void;
 }
 
-export enum APPSTATUS {
-    UNAVAILABLE,
-    CONNECTED,
-    DISCONNECTED,
-}
-
 const connectedApps: connectedApp[] = [
     {
-        id: "linkedin",
+        id: APPTYPE.LINKEDIN,
         name: "LinkedIn",
         icon: LinkedinLogoIcon,
-        status: APPSTATUS.DISCONNECTED,
+        enable: true,
         colors: {
             bg: "bg-[#0C67C4]/5 hover:bg-[#0C67C4]/10!",
             text: "group-hover:text-[#0C67C4] group-hover:text-foreground!",
-            logo: "group-hover:text-[#0C67C4] group-hover:text-foreground!",
+            logo: "group-hover:fill-[#0C67C4] fill-[#0C67C4] group-hover:text-foreground!",
             button: "hover:bg-[#0C67C4]/80! rounded-sm!"
         },
         connectAction: initiateLinkedInAuth
     },
     {
-        id: "x",
+        id: APPTYPE.X,
         name: "X",
         icon: XLogoIcon,
-        status: APPSTATUS.UNAVAILABLE,
+        enable: false,
         colors: {
             bg: "bg-[#000000]/15",
             text: "group-hover:text-[#]!",
@@ -48,10 +43,10 @@ const connectedApps: connectedApp[] = [
         }
     },
     {
-        id: "instagram",
+        id: APPTYPE.INSTAGRAM,
         name: "Instagram",
         icon: InstagramLogoIcon,
-        status: APPSTATUS.UNAVAILABLE,
+        enable: false,
         colors: {
             bg: "bg-[#E34158]/5",
             text: "group-hover:text-[#]!",
@@ -60,10 +55,10 @@ const connectedApps: connectedApp[] = [
         }
     },
     {
-        id: "facebook",
+        id: APPTYPE.FACEBOOK,
         name: "Facebook",
         icon: FacebookLogoIcon,
-        status: APPSTATUS.UNAVAILABLE,
+        enable: false,
         colors: {
             bg: "bg-[#1877F2]/5",
             text: "group-hover:text-[#]!",
@@ -72,10 +67,10 @@ const connectedApps: connectedApp[] = [
         }
     },
     {
-        id: "threads",
+        id: APPTYPE.THREADS,
         name: "Threads",
         icon: ThreadsLogoIcon,
-        status: APPSTATUS.UNAVAILABLE,
+        enable: false,
         colors: {
             bg: "bg-[#000000]/10",
             text: "group-hover:text-[#]!",
