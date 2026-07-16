@@ -32,8 +32,6 @@ jobs:
           mkdir -p backend/api-gateway
           cat <<EOF > backend/api-gateway/.env
           JWT_PUBLIC_KEY="${{ secrets.JWT_PUBLIC_KEY }}"
-          JWT_PRIVATE_KEY="${{ secrets.JWT_PRIVATE_KEY }}"
-          FRONTEND_URL="${{ secrets.FRONTEND_URL }}"
           EOF
 
       - name: Create LinkedIn Environment File
@@ -51,7 +49,10 @@ jobs:
         run: |
           mkdir -p backend/main
           cat <<EOF > backend/main/.env
+          JWT_PRIVATE_KEY="${{ secrets.JWT_PRIVATE_KEY }}"
           DATABASE_URL="${{ secrets.MAIN_DATABASE_URL }}"
+          FRONTEND_URL="${{ secrets.FRONTEND_URL }}"
+          HOME_URL="${{ secrets.HOME_URL }}"
           EOF
 
       - name: Standardize and Rebuild Containers
