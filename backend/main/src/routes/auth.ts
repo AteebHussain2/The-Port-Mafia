@@ -20,7 +20,6 @@ export const authRoutes = new Elysia({ prefix: '/auth' })
             httpOnly: true,
             maxAge: 15 * 60,
             path: '/',
-            sameSite: 'none',
             secure: true,
         })
 
@@ -29,7 +28,6 @@ export const authRoutes = new Elysia({ prefix: '/auth' })
             httpOnly: true,
             maxAge: 30 * 24 * 3600,
             path: '/',
-            sameSite: 'none',
             secure: true,
         })
 
@@ -54,7 +52,6 @@ export const authRoutes = new Elysia({ prefix: '/auth' })
             httpOnly: true,
             maxAge: 15 * 60,
             path: '/',
-            sameSite: 'none',
             secure: true,
         })
 
@@ -63,7 +60,6 @@ export const authRoutes = new Elysia({ prefix: '/auth' })
             httpOnly: true,
             maxAge: 30 * 24 * 3600,
             path: '/',
-            sameSite: 'none',
             secure: true,
         })
 
