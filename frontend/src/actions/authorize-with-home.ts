@@ -1,7 +1,6 @@
 import { api, getUrl } from '@/lib/utils';
 
 const HOME_URL = process.env.NEXT_PUBLIC_HOME_URL!;
-const NODE_ENV = process.env.NODE_ENV!;
 
 export async function authorizeConnection() {
     try {
