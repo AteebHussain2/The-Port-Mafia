@@ -4,7 +4,7 @@ import Elysia, { t } from "elysia";
 
 export const authRoutes = new Elysia({ prefix: '/auth' })
     .use(authConfig)
-    .post("/connect-home", async ({ query, cookie: { auth, refresh }, jwt, status, headers }) => {
+    .post("/connect-home", async ({ query, jwt, status, headers }) => {
         const { pid, redirect_uri } = query;
 
         const ipAddress = headers['x-forwarded-for'] || null;
@@ -13,32 +13,16 @@ export const authRoutes = new Elysia({ prefix: '/auth' })
         const { success, payload, refreshToken, ...res } = await authorizeUser(redirect_uri, ipAddress, userAgent, pid);
         if (!success || !payload || !refreshToken) return status(res.status, { message: res.message, details: res.details })
 
-        const token = await jwt.sign(payload);
-
-        auth.set({
-            value: token,
-            httpOnly: true,
-            maxAge: 15 * 60,
-            path: '/',
-            sameSite: 'none',
-            secure: true,
-        })
-
-        refresh.set({
-            value: refreshToken,
-            httpOnly: true,
-            maxAge: 30 * 24 * 3600,
-            path: '/',
-            sameSite: 'none',
-            secure: true,
-        })
+        const auth = await jwt.sign(payload);
 
         return status(res.status, {
+            auth,
+            refreshToken,
             redirectUrl: res.redirectUrl
         })
     })
 
-    .post("/refresh", async ({ cookie: { auth, refresh }, jwt, status, headers }) => {
+    .post("/refresh", async ({ cookie: { refresh }, jwt, status, headers }) => {
         const ipAddress = headers['x-forwarded-for'] || null;
         const userAgent = headers['user-agent'] || null;
         const irToken = refresh.value as string;
@@ -47,29 +31,11 @@ export const authRoutes = new Elysia({ prefix: '/auth' })
 
         if (!refreshToken) return status(res.status, { code: res.code, message: res.message, details: res.details })
 
-        const token = await jwt.sign(payload);
-
-        auth.set({
-            value: token,
-            httpOnly: true,
-            maxAge: 15 * 60,
-            path: '/',
-            sameSite: 'none',
-            secure: true,
-        })
-
-        refresh.set({
-            value: refreshToken,
-            httpOnly: true,
-            maxAge: 30 * 24 * 3600,
-            path: '/',
-            sameSite: 'none',
-            secure: true,
-        })
+        const auth = await jwt.sign(payload);
 
         return status(res.status, {
             code: res.code,
-            token,
+            auth,
             refreshToken,
         })
     }, {

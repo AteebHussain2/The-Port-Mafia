@@ -31,14 +31,8 @@ export default function ConnectHomePage() {
     const { mutate: authorizeMutation, isPending: isAuthorizing } = useMutation({
         mutationFn: authorizeConnection,
         onSuccess: (res) => {
-            if (!res.success) {
-                toast.error("Authorization failed", {
-                    description: res.message,
-                });
-                return;
-            }
-
-            // router.push(res.redirectUrl);
+            if (!res.success) toast.error(res.message, { description: res?.details });
+            router.push(res.redirectUrl ?? "/main");
         },
         onError: () => {
             toast.error("Couldn't authorize The Port Mafia", {
