@@ -25,8 +25,6 @@ export const userRoutes = new Elysia({ prefix: '/user' })
 
         const res = await getUserConnectedApps(userId)
 
-        console.log(res);
-
         return status(res.status, { message: res.message, data: res.data });
     }, {
         headers: t.Object({

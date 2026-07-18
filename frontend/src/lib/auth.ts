@@ -39,11 +39,36 @@ export async function verifyJWT(token: string): Promise<AuthPayload | null> {
     }
 }
 
+// module-level, shared across requests hitting this same server instance
+const refreshLocks = new Map<string, Promise<any>>();
+
+async function refreshWithLock(refreshToken: string, forwardedIp: string | null, connectingIp: string | null, ua: string | null) {
+    const existing = refreshLocks.get(refreshToken);
+    if (existing) return existing;
+
+    const promise = fetch(getUrl('/auth/refresh'), {
+        headers: {
+            "Cookie": `refresh=${refreshToken}`,
+            "cf-connecting-ip": connectingIp || "",
+            "x-forwarded-for": forwardedIp || "",
+            "user-agent": ua || "",
+            "Content-Type": "application/json"
+        }
+    })
+        .then(res => res.json())
+        .finally(() => refreshLocks.delete(refreshToken));
+
+    refreshLocks.set(refreshToken, promise);
+    return promise;
+}
+
 export async function auth(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
     const token = request.cookies.get("auth")?.value;
     const refreshToken = request.cookies.get("refresh")?.value;
+
+    console.log(token, refreshToken);
 
     let payload = token ? await verifyJWT(token) : null;
 
@@ -60,21 +85,12 @@ export async function auth(request: NextRequest) {
 
     try {
         const url = getUrl('/auth/refresh');
-        console.log(url);
-        const res = await fetch(url, {
-            method: "POST",
-            headers: {
-                "Cookie": `refresh=${refreshToken}`,
-                "cf-connecting-ip": request.headers.get("cf-connecting-ip") || "",
-                "x-forwarded-for": request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "",
-                "user-agent": request.headers.get("user-agent") || "",
-                "Content-Type": "application/json"
-            }
-        });
 
-        console.log(res);
+        const forwardedIp = request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "";
+        const connectingIp = request.headers.get("cf-connecting-ip") || "";
+        const ua = request.headers.get("user-agent") || "";
 
-        const data = await res.json();
+        const data = await refreshWithLock(refreshToken, forwardedIp, connectingIp, ua)
 
         if (data.code === "SIGN_IN") {
             // Token is dead, hijacked, or invalid. Force re-login.
@@ -98,7 +114,7 @@ export async function auth(request: NextRequest) {
 
             response.cookies.set({
                 name: "auth",
-                value: data.token,
+                value: data.auth,
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
                 sameSite: "lax",
@@ -126,7 +142,6 @@ export async function auth(request: NextRequest) {
 
     } catch (error) {
         // Network failure (Gateway is offline / unreachable)
-        console.log(error)
         const errorUrl = new URL("/error", request.url);
         errorUrl.searchParams.set("message", "Network Error");
         errorUrl.searchParams.set("details", error instanceof Error ? error.message : "Could not reach the authentication server.");
