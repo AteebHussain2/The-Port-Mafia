@@ -1,5 +1,5 @@
 import { Icon, FacebookLogoIcon, InstagramLogoIcon, LinkedinLogoIcon, XLogoIcon, ThreadsLogoIcon, RedditLogoIcon, TiktokLogoIcon } from "@phosphor-icons/react";
-import { initiateLinkedInAuth } from "@/actions/connect-apps";
+import { initiateLinkedInAuth } from "@/actions/auth-apps";
 import { APPTYPE } from "@/lib/enums";
 
 export type connectedApp = {

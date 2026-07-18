@@ -1,5 +1,8 @@
+"use server"
+
 import { APPSTATUS, APPTYPE } from "@/lib/enums";
-import { api, getUrl } from "@/lib/utils";
+import { getUrl } from "@/lib/utils";
+import { api } from "@/lib/api";
 
 type AppMap = Record<APPTYPE, APPSTATUS>
 type TypeAppData = {
