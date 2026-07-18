@@ -35,8 +35,6 @@ export async function cronTokenRefresh() {
         const daysUntilRefresh = differenceInDays(token.access_token_expires_at, now);
         const daysUntilPurge = differenceInDays(token.refresh_token_expires_at, now);
 
-        console.log(daysUntilPurge, daysUntilRefresh);
-
         if (daysUntilPurge <= 1) {
             const { success, ...res } = await purgreUserTokens(token.userId);
 

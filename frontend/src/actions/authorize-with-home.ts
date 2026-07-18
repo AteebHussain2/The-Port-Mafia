@@ -23,7 +23,6 @@ export async function authorizeConnection(): Promise<Return> {
         // getting pid, a request is made to server which communicates with the home server to get user credentials
         // after verification, server returns a response with cookies set for jwt
         const res = await api.post(getUrl("/auth/connect-home"));
-        console.log("@@RES: ", res)
 
         if (res.status !== 200)
             return { success: false, message: res.data.message, details: res.data.details }
@@ -53,7 +52,6 @@ export async function authorizeConnection(): Promise<Return> {
         // const url = new URL("/auth/connect?app=the-port-mafia", HOME_URL).toString();
         // return url;
     } catch (error) {
-        console.log(error)
         return { success: false, message: "Something went wrong!", details: error instanceof Error ? error.message : "Unexpected Error" }
     }
 }

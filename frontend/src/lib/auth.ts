@@ -59,7 +59,9 @@ export async function auth(request: NextRequest) {
     }
 
     try {
-        const res = await fetch(getUrl('/auth/refresh'), {
+        const url = getUrl('/auth/refresh');
+        console.log(url);
+        const res = await fetch(url, {
             method: "POST",
             headers: {
                 "Cookie": `refresh=${refreshToken}`,
@@ -69,6 +71,8 @@ export async function auth(request: NextRequest) {
                 "Content-Type": "application/json"
             }
         });
+
+        console.log(res);
 
         const data = await res.json();
 
@@ -122,9 +126,10 @@ export async function auth(request: NextRequest) {
 
     } catch (error) {
         // Network failure (Gateway is offline / unreachable)
+        console.log(error)
         const errorUrl = new URL("/error", request.url);
         errorUrl.searchParams.set("message", "Network Error");
-        errorUrl.searchParams.set("details", "Could not reach the authentication server.");
+        errorUrl.searchParams.set("details", error instanceof Error ? error.message : "Could not reach the authentication server.");
         errorUrl.searchParams.set("from", pathname);
         return NextResponse.redirect(errorUrl);
     }

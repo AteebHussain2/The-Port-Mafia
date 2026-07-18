@@ -14,8 +14,6 @@ export async function updateLinkedInStatus(userId: string, status: APPSTATUS) {
             })
         })
 
-        console.log(res);
-
         if (!res.ok)
             return {
                 status: res.status,
