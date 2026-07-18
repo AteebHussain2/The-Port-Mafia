@@ -14,6 +14,8 @@ export async function getAppConnections() {
     try {
         const res = await api.get(getUrl("/main/user/connected-apps"));
 
+        console.log(res);
+
         const data = res.data as TypeAppData;
 
         if (res.status !== 200 || !data.data)
@@ -21,6 +23,7 @@ export async function getAppConnections() {
 
         return data.data
     } catch (error) {
+        console.log(error)
         return null
     }
 }

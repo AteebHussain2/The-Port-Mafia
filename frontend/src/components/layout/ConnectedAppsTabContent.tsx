@@ -1,21 +1,21 @@
 "use client";
 
 import { getAppConnections } from '@/actions/app-connections';
+import { useQuery } from '@tanstack/react-query';
+import { APPSTATUS, APPTYPE } from '@/lib/enums';
 import { Separator } from '../ui/separator';
 import { TabsContent } from '../ui/tabs';
 import connectedApps from "@/data/apps";
+import { Loader } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { cn } from '@/lib/utils';
-import { useQuery } from '@tanstack/react-query';
-import { Loader } from 'lucide-react';
-import { APPSTATUS, APPTYPE } from '@/lib/enums';
 
 const ConnectedAppsTabContent = () => {
     const { data: appMap, isLoading } = useQuery({
         queryFn: getAppConnections,
         queryKey: ['appConnections'],
-        refetchOnWindowFocus: false,
+        // refetchOnWindowFocus: false,
     });
 
     return (

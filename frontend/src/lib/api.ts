@@ -26,7 +26,8 @@ api.interceptors.request.use(async (config) => {
     const userIp = headerStore.get('cf-connecting-ip') || headerStore.get('x-forwarded-for') || '';
     const userAgent = headerStore.get('user-agent') || '';
 
-    const refreshToken = cookieStore.get('refreshToken')?.value;
+    const refreshToken = cookieStore.get('refresh')?.value;
+    const auth = cookieStore.get('auth')?.value
 
     if (userIp) config.headers['x-forwarded-for'] = userIp;
     if (userAgent) config.headers['user-agent'] = userAgent;
@@ -34,8 +35,8 @@ api.interceptors.request.use(async (config) => {
     if (refreshToken) {
         const existingCookies = config.headers['Cookie'] || '';
         config.headers['Cookie'] = existingCookies
-            ? `${existingCookies}; refreshToken=${refreshToken}`
-            : `refreshToken=${refreshToken}`;
+            ? `${existingCookies}; refresh=${refreshToken}; auth=${auth}`
+            : `refresh=${refreshToken}; auth=${auth}`;
     }
 
     return config;
