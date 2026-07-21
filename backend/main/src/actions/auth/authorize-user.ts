@@ -62,10 +62,10 @@ export async function getUserPayload(pid?: string, userId?: string) {
                 message: 'Bad Request: Missing profile authorization target (pid or userId)'
             }
 
-        const homeServiceUrl = process.env.HOME_URL;
-        if (!homeServiceUrl) return { status: 404, success: false, message: "Server Error: HOME_URL not found." };
+        const HOME_SERVER_URL = process.env.HOME_SERVER_URL;
+        if (!HOME_SERVER_URL) return { status: 404, success: false, message: "Server Error: HOME_SERVER_URL not found." };
 
-        const target = new URL("/api/v1/auth/verify", homeServiceUrl).toString();
+        const target = new URL("/api/v1/auth/verify", HOME_SERVER_URL).toString();
 
         const res = await fetch(`${target}?${params}`, {
             method: 'GET',
