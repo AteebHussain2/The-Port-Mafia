@@ -3,6 +3,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getLoginUrl, getUrl } from "./utils";
 import { jwtVerify, importSPKI } from "jose";
+import { randomUUID } from "node:crypto";
 import { cookies } from "next/headers";
 import dotenv from "dotenv";
 
@@ -67,6 +68,7 @@ async function refreshWithLock(refreshToken: string, forwardedIp: string | null,
 
 export async function auth(request: NextRequest) {
     const { pathname } = request.nextUrl;
+    const state = randomUUID();
 
     const token = request.cookies.get("auth")?.value;
     const refreshToken = request.cookies.get("refresh")?.value;
@@ -81,7 +83,17 @@ export async function auth(request: NextRequest) {
     }
 
     if (!refreshToken) {
-        return NextResponse.redirect(getLoginUrl(pathname));
+        const response = NextResponse.redirect(getLoginUrl(pathname, state));
+        response.cookies.set({
+            name: "state",
+            value: state,
+            maxAge: 300,
+            sameSite: "lax",
+            secure: true,
+            httpOnly: true,
+        });
+
+        return response;
     }
 
     try {
@@ -93,7 +105,17 @@ export async function auth(request: NextRequest) {
 
         if (data.code === "SIGN_IN") {
             // Token is dead, hijacked, or invalid. Force re-login.
-            return NextResponse.redirect(getLoginUrl(pathname));
+            const response = NextResponse.redirect(getLoginUrl(pathname, state));
+            response.cookies.set({
+                name: "state",
+                value: state,
+                maxAge: 300,
+                sameSite: "lax",
+                secure: true,
+                httpOnly: true,
+            });
+
+            return response;
         }
 
         if (data.code === "SERVER_ERROR") {
@@ -102,8 +124,19 @@ export async function auth(request: NextRequest) {
             errorUrl.searchParams.set("message", data.message || "Authentication failure");
             errorUrl.searchParams.set("details", data.details || "Gateway rejected refresh request");
             errorUrl.searchParams.set("from", pathname);
-            errorUrl.searchParams.set("to", getLoginUrl(pathname));
-            return NextResponse.redirect(errorUrl);
+            errorUrl.searchParams.set("to", getLoginUrl(pathname, state));
+
+            const response = NextResponse.redirect(errorUrl);
+            response.cookies.set({
+                name: "state",
+                value: state,
+                maxAge: 300,
+                sameSite: "lax",
+                secure: true,
+                httpOnly: true,
+            });
+
+            return response;
         }
 
         if (data.code === "SUCCESS") {
@@ -115,7 +148,7 @@ export async function auth(request: NextRequest) {
                 name: "auth",
                 value: data.auth,
                 httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
+                secure: true,
                 sameSite: "lax",
                 maxAge: 15 * 60
             });
@@ -124,7 +157,7 @@ export async function auth(request: NextRequest) {
                 name: "refresh",
                 value: data.refreshToken,
                 httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
+                secure: true,
                 sameSite: "lax",
                 maxAge: 7 * 24 * 60 * 60
             });
@@ -133,11 +166,23 @@ export async function auth(request: NextRequest) {
                 response.headers.set("x-user-id", payload.userId);
             }
 
+            response.cookies.delete("state");
+
             return response;
         }
 
         // Fallback catch-all if the server returns weird data
-        return NextResponse.redirect(getLoginUrl(pathname));
+        const response = NextResponse.redirect(getLoginUrl(pathname, state));
+        response.cookies.set({
+            name: "state",
+            value: state,
+            maxAge: 300,
+            sameSite: "lax",
+            secure: true,
+            httpOnly: true,
+        });
+
+        return response;
 
     } catch (error) {
         // Network failure (Gateway is offline / unreachable)

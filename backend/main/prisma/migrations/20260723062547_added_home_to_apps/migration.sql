@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "APPTYPE" ADD VALUE 'HOME';

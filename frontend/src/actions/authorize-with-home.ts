@@ -11,9 +11,14 @@ type Return = {
     redirectUrl?: string
 }
 
-export async function authorizeConnection(pid: string, redirectTo?: string): Promise<Return> {
+export async function authorizeConnection(pid: string, state: string, redirectTo?: string): Promise<Return> {
     try {
         const cookieStore = await cookies();
+        const storedState = cookieStore.get("state")?.value;
+        cookieStore.delete("state");
+
+        if (!storedState || storedState !== state)
+            return { success: false, message: "Invalid Session!", details: "The provided state doesn't match." }
 
         const res = await api.post(getUrl(`/auth/connect-home?pid=${pid}&redirect_uri=${redirectTo}`));
         const data = res.data

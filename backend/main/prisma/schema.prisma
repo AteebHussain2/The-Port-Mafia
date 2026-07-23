@@ -53,6 +53,7 @@ model connectedApps {
 }
 
 enum APPTYPE {
+  HOME
   LINKEDIN
   X
   REDDIT

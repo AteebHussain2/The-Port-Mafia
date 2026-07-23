@@ -35,6 +35,7 @@ function LinkedInCallbackHandler() {
     const hasFiredRef = useRef(false);
 
     const code = searchParams.get("code");
+    const state = searchParams.get("state");
     const oauthError = searchParams.get("error");
     const oauthErrorDescription = searchParams.get("error_description");
 
@@ -44,7 +45,7 @@ function LinkedInCallbackHandler() {
         isError: hasThrown,
         data: result,
     } = useMutation({
-        mutationFn: exchangeLinkedInCode,
+        mutationFn: async ({ code, state }: { code: string; state: string }) => await exchangeLinkedInCode(code, state),
         onSuccess: (res) => {
             if (!res.success) {
                 toast.error("Couldn't connect LinkedIn", { description: res.message });
@@ -62,10 +63,10 @@ function LinkedInCallbackHandler() {
     });
 
     useEffect(() => {
-        if (hasFiredRef.current || oauthError || !code) return;
+        if (hasFiredRef.current || oauthError || !code || !state) return;
         hasFiredRef.current = true;
-        runExchange(code);
-    }, [code, oauthError]);
+        runExchange({ code, state });
+    }, [code, oauthError, state]);
 
     if (oauthError) {
         return (

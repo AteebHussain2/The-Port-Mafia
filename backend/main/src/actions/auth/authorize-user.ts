@@ -1,10 +1,27 @@
+import { APPSTATUS, APPTYPE } from "../../generated/prisma";
 import { createOpaqueRefreshToken } from "../../lib/crypto";
 import { verifyFingerprint } from "./verify-signature";
 import { prisma } from "../../lib/db";
 import { createHash } from "crypto";
 import { addDays } from "date-fns";
 
-export async function authorizeUser(pid: string, ipAddress: string | null, userAgent: string | null, redirectUrl?: string) {
+type ReturnTypeAuthUser = {
+    success: boolean,
+    status: number,
+    message: string,
+    details?: string,
+    redirectUrl?: string,
+    payload?: {
+        userId: string,
+        firstName: string,
+        lastName?: string,
+        email: string,
+        auth_time: Date,
+    },
+    refreshToken?: string,
+}
+
+export async function authorizeUser(pid: string, ipAddress: string | null, userAgent: string | null, redirectUrl?: string): Promise<ReturnTypeAuthUser> {
     try {
         const defaultDestination = new URL('/main?connection-successful=true', process.env.FRONTEND_URL).toString();
         const clientDestination = redirectUrl ? decodeURIComponent(redirectUrl) : defaultDestination;
@@ -22,7 +39,13 @@ export async function authorizeUser(pid: string, ipAddress: string | null, userA
         });
 
         const { success: tokenSuccess, refreshToken, ...tokenRes } = await getRefreshToken(session.id);
-        if (!tokenSuccess || !refreshToken) return { ...tokenRes }
+        if (!tokenSuccess || !refreshToken) return { success, ...tokenRes, details: "IDK" }
+
+        await prisma.connectedApps.upsert({
+            where: { userId_app: { userId: payload.userId, app: APPTYPE.HOME } },
+            create: { userId: payload.userId, app: APPTYPE.HOME, status: APPSTATUS.CONNECTED },
+            update: { status: APPSTATUS.CONNECTED }
+        })
 
         return {
             status: 200,
@@ -36,7 +59,7 @@ export async function authorizeUser(pid: string, ipAddress: string | null, userA
         return {
             status: 500,
             success: false,
-            error: 'Internal Gateway Error: Handshake validation broke down.',
+            message: 'Internal Gateway Error: Handshake validation broke down.',
             details: error instanceof Error ? error.message : String(error)
         }
     }

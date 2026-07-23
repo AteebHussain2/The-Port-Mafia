@@ -1,6 +1,6 @@
 import Elysia, { t } from "elysia";
 import { APPSTATUS, APPTYPE } from "../generated/prisma";
-import { getUserConnectedApps, userAppConnection } from "../actions/user/app-connetion";
+import { getUserConnectedApps, userAppConnection } from "../actions/user/app-connection";
 
 export const userRoutes = new Elysia({ prefix: '/user' })
     .post("/connect-app", async ({ body, headers, status }) => {

@@ -5,6 +5,7 @@ export enum LOGLEVEL {
 }
 
 export enum APPTYPE {
+    HOME = "HOME",
     LINKEDIN = "LINKEDIN",
     X = "X",
     REDDIT = "REDDIT",

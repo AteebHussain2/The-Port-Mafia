@@ -15,7 +15,7 @@ const ConnectedAppsTabContent = () => {
     const { data: appMap, isLoading } = useQuery({
         queryFn: getAppConnections,
         queryKey: ['appConnections'],
-        // refetchOnWindowFocus: false,
+        refetchOnWindowFocus: false,
     });
 
     return (

@@ -29,13 +29,14 @@ export function getRedirectUrl(searchParams: URLSearchParams): string {
   return "/";
 }
 
-export function getLoginUrl(pathname: string): string {
+export function getLoginUrl(pathname: string, state: string): string {
   const callbackUrl = new URL("/auth/connect", FRONTEND_URL).toString();
 
   const loginUrl = new URL("/auth/connect", HOME_URL);
   loginUrl.searchParams.set("app", "the-port-mafia");
   loginUrl.searchParams.set("callbackUrl", callbackUrl);
   loginUrl.searchParams.set("redirectTo", pathname);
+  loginUrl.searchParams.set("state", state);
 
   return loginUrl.toString();
 }

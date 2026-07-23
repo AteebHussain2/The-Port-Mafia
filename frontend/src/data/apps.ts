@@ -1,4 +1,4 @@
-import { Icon, FacebookLogoIcon, InstagramLogoIcon, LinkedinLogoIcon, XLogoIcon, ThreadsLogoIcon, RedditLogoIcon, TiktokLogoIcon } from "@phosphor-icons/react";
+import { Icon, FacebookLogoIcon, InstagramLogoIcon, LinkedinLogoIcon, XLogoIcon, ThreadsLogoIcon, RedditLogoIcon, TiktokLogoIcon, HouseIcon } from "@phosphor-icons/react";
 import { initiateLinkedInAuth } from "@/actions/auth-apps";
 import { APPTYPE } from "@/lib/enums";
 
@@ -17,6 +17,18 @@ export type connectedApp = {
 }
 
 const connectedApps: connectedApp[] = [
+    {
+        id: APPTYPE.HOME,
+        name: "Home",
+        icon: HouseIcon,
+        enable: true,
+        colors: {
+            bg: "bg-[#0C67C4]/5 hover:bg-[#0C67C4]/10!",
+            text: "group-hover:text-[#0C67C4] group-hover:text-foreground!",
+            logo: "group-hover:fill-[#0C67C4] fill-[#0C67C4] group-hover:text-foreground!",
+            button: "hover:bg-[#0C67C4]/80! rounded-sm!"
+        },
+    },
     {
         id: APPTYPE.LINKEDIN,
         name: "LinkedIn",
