@@ -11,6 +11,7 @@ export const authRoutes = new Elysia({ prefix: '/auth' })
         const userAgent = headers['user-agent'] || null;
 
         const { success, payload, refreshToken, ...res } = await authorizeUser(pid, ipAddress, userAgent, redirect_uri);
+        console.log(res);
         if (!success || !payload || !refreshToken) return status(res.status, { message: res.message, details: res?.details })
 
         const auth = await jwt.sign(payload);

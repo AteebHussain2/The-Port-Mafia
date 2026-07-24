@@ -1,9 +1,21 @@
-import { APPSTATUS, APPTYPE } from "../../generated/prisma";
 import { createOpaqueRefreshToken } from "../../lib/crypto";
+import { APPSTATUS, APPTYPE } from "../../generated/prisma";
 import { verifyFingerprint } from "./verify-signature";
 import { prisma } from "../../lib/db";
 import { createHash } from "crypto";
 import { addDays } from "date-fns";
+
+type Payload = {
+    userId: string,
+    firstName: string,
+    lastName?: string | null,
+    email: string,
+}
+
+type PayloadData = {
+    message: string,
+    payload: Payload
+}
 
 type ReturnTypeAuthUser = {
     success: boolean,
@@ -11,13 +23,7 @@ type ReturnTypeAuthUser = {
     message: string,
     details?: string,
     redirectUrl?: string,
-    payload?: {
-        userId: string,
-        firstName: string,
-        lastName?: string,
-        email: string,
-        auth_time: Date,
-    },
+    payload?: Payload,
     refreshToken?: string,
 }
 
@@ -103,13 +109,14 @@ export async function getUserPayload(pid?: string, userId?: string) {
             };
         }
 
-        const userData = await res.json();
+        const data = await res.json() as PayloadData;
+        const userData = data.payload;
 
         const payload = {
-            userId: String(userData.userId),
-            firstName: String(userData.firstName),
-            lastName: userData.lastName ? String(userData.lastName) : undefined,
-            email: String(userData.email),
+            userId: userData.userId,
+            firstName: userData.firstName,
+            lastName: userData.lastName ? userData.lastName : undefined,
+            email: userData.email,
             auth_time: new Date()
         };
 
